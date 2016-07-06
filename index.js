@@ -3,14 +3,19 @@ var html = require('choo/html')
 var choo = require('choo')
 var app = choo()
 
-function mapView (state, prev, send) {
-  function onload (node) {
-    map.invalidateSize()
-    send('map:created')
-  }
+function onload (node) {
+  map.invalidateSize()
+}
 
-  var el = html`<div onload=${onload} id="map"></div>`  
-  var map = createMap(el, state.map)
+var el = html`<div onload=${onload} id="map"></div>`  
+var map = createMap(el, {
+  setView: true,
+  center: [47.606,-122.332],
+  zoom: 11,
+  created: false
+})
+
+function mapView (state, prev, send) {
   return html`<div class="map-wrapper">${el}</div>`
 }
 
