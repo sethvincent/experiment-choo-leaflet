@@ -1,0 +1,4 @@
+html, body, #map, .map-wrapper {
+  height: 100%;
+  width: 100%;
+}

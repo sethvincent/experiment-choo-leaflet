@@ -1,0 +1,26 @@
+{
+  "name": "experiment-choo-leaflet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "budo index.js:bundle.js --live --pushstate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sethvincent/experiment-choo-leaflet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sethvincent/experiment-choo-leaflet/issues"
+  },
+  "homepage": "https://github.com/sethvincent/experiment-choo-leaflet#readme",
+  "dependencies": {
+    "choo": "^3.0.1",
+    "leaflet": "^0.7.7"
+  },
+  "devDependencies": {
+    "budo": "^8.3.0"
+  }
+}
