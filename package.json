@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "bundle": "browserify index.js -o bundle.js",
     "start": "budo index.js:bundle.js --live --pushstate"
   },
   "repository": {
@@ -21,6 +22,7 @@
     "leaflet": "^0.7.7"
   },
   "devDependencies": {
+    "browserify": "^13.0.1",
     "budo": "^8.3.0"
   }
 }
