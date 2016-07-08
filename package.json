@@ -20,6 +20,7 @@
   "homepage": "https://github.com/sethvincent/experiment-choo-leaflet#readme",
   "dependencies": {
     "choo": "^3.0.1",
+    "choo-log": "^1.0.0",
     "leaflet": "^0.7.7"
   },
   "devDependencies": {
