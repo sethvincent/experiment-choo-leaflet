@@ -1,63 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var leaflet = require('leaflet')
-var html = require('choo/html')
 var choo = require('choo')
 var app = choo()
 
-var initialMapState = {
-  setView: true,
-  center: [0, 0],
-  zoom: 2,
-}
-
-function onload (node) {
-  map.invalidateSize()
-}
-
-var el = html`<div onload=${onload} id="map"></div>`  
-var map = createMap(el, initialMapState)
-
-function nav (state, prev, send) {
-  function onclick (e) {
-    send('map:panAndZoom', { center: [47.606,-122.332], zoom: 14 })
-  }
-  return html`<button onclick=${onclick}>go to seattle!</button>`
-}
-
-function mapView (state, prev, send) {
-  map.setZoom(state.map.zoom)
-  map.panTo(state.map.center)
-  return html`<div class="map-wrapper">${el}</div>`
-}
-
-function layout (state, prev, send) {
-  return html`
-    <div class="app">
-      ${nav(state, prev, send)}
-      ${mapView(state, prev, send)}
-    </div>
-  `
-}
-
-function createMap (id, options) {
-  var map = L.map(id, options)
-
-  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2V0aHZpbmNlbnQiLCJhIjoiSXZZXzZnUSJ9.Nr_zKa-4Ztcmc1Ypl0k5nw', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
-  }).addTo(map)
-
-  return map
-}
-
-app.model({
-  namespace: 'map',
-  state: initialMapState,
-  reducers: {
-    panAndZoom: function (data, state) {
-      return { zoom: data.zoom, center: data.center }
-    }
-  }
-})
+var layout = require('./views/layout')
+app.model(require('./models/map'))
 
 app.router(function (route) {
   return [
@@ -68,7 +14,21 @@ app.router(function (route) {
 var tree = app.start()
 document.body.appendChild(tree)
 
-},{"choo":8,"choo/html":7,"leaflet":16}],2:[function(require,module,exports){
+},{"./models/map":2,"./views/layout":33,"choo":9}],2:[function(require,module,exports){
+module.exports = {
+  namespace: 'map',
+  state: {
+    setView: true,
+    center: [0, 0],
+    zoom: 2,
+  },
+  reducers: {
+    panAndZoom: function (data, state) {
+      return { zoom: data.zoom, center: data.center }
+    }
+  }
+}
+},{}],3:[function(require,module,exports){
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 //
 // THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
@@ -429,7 +389,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":25}],3:[function(require,module,exports){
+},{"util/":26}],4:[function(require,module,exports){
 const mutate = require('xtend/mutable')
 const assert = require('assert')
 const xtend = require('xtend')
@@ -646,7 +606,7 @@ function wrapOnError (onError) {
   }
 }
 
-},{"assert":2,"xtend":28,"xtend/mutable":29}],4:[function(require,module,exports){
+},{"assert":3,"xtend":29,"xtend/mutable":30}],5:[function(require,module,exports){
 var document = require('global/document')
 var hyperx = require('hyperx')
 var onload = require('on-load')
@@ -785,9 +745,9 @@ function belCreateElement (tag, props, children) {
 module.exports = hyperx(belCreateElement)
 module.exports.createElement = belCreateElement
 
-},{"global/document":10,"hyperx":14,"on-load":18}],5:[function(require,module,exports){
+},{"global/document":11,"hyperx":15,"on-load":19}],6:[function(require,module,exports){
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -908,10 +868,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = require('yo-yo')
 
-},{"yo-yo":30}],8:[function(require,module,exports){
+},{"yo-yo":31}],9:[function(require,module,exports){
 const history = require('sheet-router/history')
 const sheetRouter = require('sheet-router')
 const document = require('global/document')
@@ -1085,7 +1045,7 @@ function appInit (opts) {
   }
 }
 
-},{"assert":2,"barracks":3,"document-ready":9,"global/document":10,"hash-match":12,"sheet-router":23,"sheet-router/hash":20,"sheet-router/history":21,"sheet-router/href":22,"xtend":28,"yo-yo":30}],9:[function(require,module,exports){
+},{"assert":3,"barracks":4,"document-ready":10,"global/document":11,"hash-match":13,"sheet-router":24,"sheet-router/hash":21,"sheet-router/history":22,"sheet-router/href":23,"xtend":29,"yo-yo":31}],10:[function(require,module,exports){
 'use strict'
 
 var document = require('global/document')
@@ -1104,7 +1064,7 @@ function ready (callback) {
 
 function noop () {}
 
-},{"global/document":10}],10:[function(require,module,exports){
+},{"global/document":11}],11:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -1123,7 +1083,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":5}],11:[function(require,module,exports){
+},{"min-document":6}],12:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -1136,7 +1096,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function hashMatch (hash, prefix) {
   var pre = prefix || '/';
   if (hash.length === 0) return pre;
@@ -1147,7 +1107,7 @@ module.exports = function hashMatch (hash, prefix) {
   else return hash.replace(pre, '');
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1168,7 +1128,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1433,7 +1393,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":13}],15:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":14}],16:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1458,7 +1418,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -10625,7 +10585,7 @@ L.Map.include({
 
 
 }(window, document));
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // Create a range object for efficently rendering strings to elements.
 var range;
 
@@ -11204,7 +11164,7 @@ function morphdom(fromNode, toNode, options) {
 
 module.exports = morphdom;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /* global MutationObserver */
 var document = require('global/document')
 var window = require('global/window')
@@ -11293,7 +11253,7 @@ function eachMutation (nodes, fn) {
   }
 }
 
-},{"global/document":10,"global/window":11}],19:[function(require,module,exports){
+},{"global/document":11,"global/window":12}],20:[function(require,module,exports){
 const assert = require('assert')
 
 module.exports = match
@@ -11313,7 +11273,7 @@ function match (route) {
     .replace(/\/$/, '')
 }
 
-},{"assert":2}],20:[function(require,module,exports){
+},{"assert":3}],21:[function(require,module,exports){
 const window = require('global/window')
 const assert = require('assert')
 
@@ -11329,7 +11289,7 @@ function hash (cb) {
   }
 }
 
-},{"assert":2,"global/window":11}],21:[function(require,module,exports){
+},{"assert":3,"global/window":12}],22:[function(require,module,exports){
 const document = require('global/document')
 const window = require('global/window')
 const assert = require('assert')
@@ -11346,7 +11306,7 @@ function history (cb) {
   }
 }
 
-},{"assert":2,"global/document":10,"global/window":11}],22:[function(require,module,exports){
+},{"assert":3,"global/document":11,"global/window":12}],23:[function(require,module,exports){
 const window = require('global/window')
 const assert = require('assert')
 
@@ -11377,7 +11337,7 @@ function href (cb) {
   }
 }
 
-},{"assert":2,"global/window":11}],23:[function(require,module,exports){
+},{"assert":3,"global/window":12}],24:[function(require,module,exports){
 const pathname = require('pathname-match')
 const wayfarer = require('wayfarer')
 const assert = require('assert')
@@ -11448,14 +11408,14 @@ function _createRoute (route, inline, child) {
   return [ route, inline, child ]
 }
 
-},{"assert":2,"pathname-match":19,"wayfarer":26}],24:[function(require,module,exports){
+},{"assert":3,"pathname-match":20,"wayfarer":27}],25:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -12045,7 +12005,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":24,"_process":6,"inherits":15}],26:[function(require,module,exports){
+},{"./support/isBuffer":25,"_process":7,"inherits":16}],27:[function(require,module,exports){
 const assert = require('assert')
 const trie = require('./trie')
 
@@ -12106,7 +12066,7 @@ function Wayfarer (dft) {
   }
 }
 
-},{"./trie":27,"assert":2}],27:[function(require,module,exports){
+},{"./trie":28,"assert":3}],28:[function(require,module,exports){
 const mutate = require('xtend/mutable')
 const assert = require('assert')
 const xtend = require('xtend')
@@ -12223,7 +12183,7 @@ Trie.prototype.mount = function (route, trie) {
   }
 }
 
-},{"assert":2,"xtend":28,"xtend/mutable":29}],28:[function(require,module,exports){
+},{"assert":3,"xtend":29,"xtend/mutable":30}],29:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -12244,7 +12204,7 @@ function extend() {
     return target
 }
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -12263,7 +12223,7 @@ function extend(target) {
     return target
 }
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var bel = require('bel') // turns template tag into DOM elements
 var morphdom = require('morphdom') // efficiently diffs + morphs two DOM elements
 var defaultEvents = require('./update-events.js') // default events to be copied when dom elements update
@@ -12299,7 +12259,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 }
 
-},{"./update-events.js":31,"bel":4,"morphdom":17}],31:[function(require,module,exports){
+},{"./update-events.js":32,"bel":5,"morphdom":18}],32:[function(require,module,exports){
 module.exports = [
   // attribute events (can be set with attributes)
   'onclick',
@@ -12337,4 +12297,62 @@ module.exports = [
   'onfocusout'
 ]
 
-},{}]},{},[1]);
+},{}],33:[function(require,module,exports){
+var html = require('choo/html')
+
+var nav = require('./nav')
+var createMapView = require('./map')
+var initialMapState = require('../models/map').state
+var map = createMapView({
+  initialState: initialMapState
+})
+
+module.exports = function layout (state, prev, send) {
+  return html`
+    <div class="app">
+      ${nav(state, prev, send)}
+      ${map(state, prev, send)}
+    </div>
+  `
+}
+
+},{"../models/map":2,"./map":34,"./nav":35,"choo/html":8}],34:[function(require,module,exports){
+var leaflet = require('leaflet')
+var html = require('choo/html')
+
+module.exports = function createMapView (options) {
+  function onload (node) {
+    map.invalidateSize()
+  }
+
+  var el = html`<div onload=${onload} id="map"></div>`  
+  var map = createMap(el, options.initialState)
+
+  return function mapView (state, prev, send) {
+    map.setZoom(state.map.zoom)
+    map.panTo(state.map.center)
+    return html`<div class="map-wrapper">${el}</div>`
+  }
+}
+
+function createMap (id, options) {
+  var map = L.map(id, options)
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2V0aHZpbmNlbnQiLCJhIjoiSXZZXzZnUSJ9.Nr_zKa-4Ztcmc1Ypl0k5nw', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
+  }).addTo(map)
+
+  return map
+}
+
+},{"choo/html":8,"leaflet":17}],35:[function(require,module,exports){
+var html = require('choo/html')
+
+module.exports = function nav (state, prev, send) {
+  function onclick (e) {
+    send('map:panAndZoom', { center: [47.606,-122.332], zoom: 14 })
+  }
+  return html`<button onclick=${onclick}>go to seattle!</button>`
+}
+
+},{"choo/html":8}]},{},[1]);
