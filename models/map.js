@@ -3,7 +3,7 @@ module.exports = {
   state: {
     setView: true,
     center: [0, 0],
-    zoom: 2,
+    zoom: 2
   },
   reducers: {
     panAndZoom: function (data, state) {

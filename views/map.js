@@ -1,4 +1,4 @@
-var leaflet = require('leaflet')
+var L = require('leaflet')
 var html = require('choo/html')
 
 module.exports = function createMapView (options) {
@@ -6,7 +6,7 @@ module.exports = function createMapView (options) {
     map.invalidateSize()
   }
 
-  var el = html`<div onload=${onload} id="map"></div>`  
+  var el = html`<div onload=${onload} id="map"></div>`
   var map = createMap(el, options.initialState)
 
   return function mapView (state, prev, send) {
